@@ -26,12 +26,6 @@ for question_id, question_data in random_questions:
     # Use MedRAG to generate the answer
     generated_answer, _, _ = cot.answer(question=question, options=options)
 
-    # Parse the generated answer if it's a dictionary
-    # try:
-    #     generated_answer_dict = json.loads(generated_answer)  # Convert the string to a dictionary
-    #     generated_choice = generated_answer_dict['answer_choice'].strip('" ')  # Extract and clean the answer choice
-    # except (json.JSONDecodeError, KeyError):
-    #     generated_choice = generated_answer.strip('" ').split('.')[0].strip()  # Extract only the letter choice
     generated_answer_dict = json.loads(generated_answer)
     generated_choice = generated_answer_dict.get('answer_choice', None)
     # Compare the generated answer with the correct one
