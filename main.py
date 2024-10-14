@@ -7,10 +7,10 @@ with open('benchmark.json', 'r') as f:
     benchmark_data = json.load(f)
 
 # Get 5 random questions
-random_questions = random.sample(list(benchmark_data.items()), 100)
+random_questions = random.sample(list(benchmark_data.items()), 1)
 
 # Initialize the MedRAG system
-medrag_system = MedRAG(llm_name="OpenAI/gpt-3.5-turbo-16k", rag=False)
+cot = MedRAG(llm_name="OpenAI/gpt-3.5-turbo-16k", rag=False)
 
 # Store the results of comparisons
 results = []
@@ -24,38 +24,38 @@ for question_id, question_data in random_questions:
     correct_answer = question_data['answer']
 
     # Use MedRAG to generate the answer
-    generated_answer, _, _ = medrag_system.answer(question=question, options=options)
+    generated_answer, _, _ = cot.answer(question=question, options=options)
 
     # Parse the generated answer if it's a dictionary
-    try:
-        generated_answer_dict = json.loads(generated_answer)  # Convert the string to a dictionary
-        generated_choice = generated_answer_dict['answer_choice'].strip('" ')[0].strip()  # Extract and clean the answer choice
-    except (json.JSONDecodeError, KeyError):
-        generated_choice = generated_answer.strip('" ').split('.')[0].strip()  # Extract only the letter choice
-
+    # try:
+    #     generated_answer_dict = json.loads(generated_answer)  # Convert the string to a dictionary
+    #     generated_choice = generated_answer_dict['answer_choice'].strip('" ')  # Extract and clean the answer choice
+    # except (json.JSONDecodeError, KeyError):
+    #     generated_choice = generated_answer.strip('" ').split('.')[0].strip()  # Extract only the letter choice
+    print(generated_answer)
     # Compare the generated answer with the correct one
-    is_correct = correct_answer == generated_choice
-    if is_correct:
-        correct_count += 1
+#     is_correct = correct_answer == generated_choice
+#     if is_correct:
+#         correct_count += 1
 
-    result = {
-        'question_id': question_id,
-        'question': question,
-        'correct_answer': correct_answer,
-        'generated_answer': generated_choice,
-        'is_correct': is_correct
-    }
-    results.append(result)
+#     result = {
+#         'question_id': question_id,
+#         'question': question,
+#         'correct_answer': correct_answer,
+#         'generated_answer': generated_choice,
+#         'is_correct': is_correct
+#     }
+#     results.append(result)
 
-# Print the results of the comparison
-for result in results:
-    print(f"Question ID: {result['question_id']}")
-    print(f"Question: {result['question']}")
-    print(f"Correct Answer: {result['correct_answer']}")
-    print(f"Generated Answer: {result['generated_answer']}")
-    print(f"Is Correct: {result['is_correct']}")
-    print('-' * 50)
+# # Print the results of the comparison
+# for result in results:
+#     print(f"Question ID: {result['question_id']}")
+#     print(f"Question: {result['question']}")
+#     print(f"Correct Answer: {result['correct_answer']}")
+#     print(f"Generated Answer: {result['generated_answer']}")
+#     print(f"Is Correct: {result['is_correct']}")
+#     print('-' * 50)
 
-# Calculate accuracy
-accuracy = correct_count / len(results) * 100
-print(f"Accuracy: {accuracy:.2f}%")
+# # Calculate accuracy
+# accuracy = correct_count / len(results) * 100
+# print(f"Accuracy: {accuracy:.2f}%")
