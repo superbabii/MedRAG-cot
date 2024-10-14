@@ -34,7 +34,7 @@ for question_id, question_data in random_questions:
     #     generated_choice = generated_answer.strip('" ').split('.')[0].strip()  # Extract only the letter choice
     generated_answer_dict = json.loads(generated_answer)
     generated_choice = generated_answer_dict.get('answer_choice', None)
-    print(generated_choice)
+    print(generated_choice[0])
     # Compare the generated answer with the correct one
 #     is_correct = correct_answer == generated_choice
 #     if is_correct:
