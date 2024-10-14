@@ -16,10 +16,6 @@ medrag_system = MedRAG(llm_name="OpenAI/gpt-3.5-turbo-16k", rag=False)
 results = []
 correct_count = 0
 
-# Function to clean and standardize answers for comparison
-def clean_answer(answer):
-    return answer.strip().lower()
-
 # Iterate over each question and get the generated answer
 for question_id, question_data in random_questions:
     # Extract the question, options, and correct answer
@@ -30,15 +26,14 @@ for question_id, question_data in random_questions:
     # Use MedRAG to generate the answer
     generated_answer, _, _ = medrag_system.answer(question=question, options=options)
     
-    # Clean the answers for comparison
-    generated_choice = clean_answer(generated_answer)  # Assuming it's the choice string itself
-    correct_choice = clean_answer(correct_answer)
-    
+    # Since generated_answer is a string, we compare it directly
+    generated_choice = generated_answer  # Assuming the output is the choice string itself
+
     # Compare the generated answer with the correct one
-    is_correct = correct_choice in generated_choice or generated_choice in correct_choice
+    is_correct = correct_answer == generated_choice
     if is_correct:
         correct_count += 1
-
+    
     result = {
         'question_id': question_id,
         'question': question,
