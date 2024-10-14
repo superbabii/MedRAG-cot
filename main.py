@@ -26,8 +26,8 @@ for question_id, question_data in random_questions:
     # Use MedRAG to generate the answer
     generated_answer, _, _ = medrag_system.answer(question=question, options=options)
     
-    # Since generated_answer is a string, we compare it directly
-    generated_choice = generated_answer  # Assuming the output is the choice string itself
+    # Strip surrounding quotes or whitespaces from the generated answer
+    generated_choice = generated_answer.strip('" ')  # Assuming the output is the choice string itself
 
     # Compare the generated answer with the correct one
     is_correct = correct_answer == generated_choice
