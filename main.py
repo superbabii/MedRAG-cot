@@ -7,7 +7,7 @@ with open('benchmark.json', 'r') as f:
     benchmark_data = json.load(f)
 
 # Get 5 random questions
-random_questions = random.sample(list(benchmark_data.items()), 5)
+random_questions = random.sample(list(benchmark_data.items()), 1)
 
 # Initialize the MedRAG system
 medrag_system = MedRAG(llm_name="OpenAI/gpt-3.5-turbo-16k", rag=False)
@@ -25,15 +25,19 @@ for question_id, question_data in random_questions:
 
     # Use MedRAG to generate the answer
     generated_answer, _, _ = medrag_system.answer(question=question, options=options)
-    
-    # Strip surrounding quotes or whitespaces from the generated answer
-    generated_choice = generated_answer.strip('" ')  # Assuming the output is the choice string itself
+
+    # Parse the generated answer if it's a dictionary
+    try:
+        generated_answer_dict = json.loads(generated_answer)  # Convert the string to a dictionary
+        generated_choice = generated_answer_dict['answer_choice'].strip('" ')  # Extract and clean the answer choice
+    except (json.JSONDecodeError, KeyError):
+        generated_choice = generated_answer.strip('" ')  # Fallback to the original format if not a dictionary
 
     # Compare the generated answer with the correct one
     is_correct = correct_answer == generated_choice
     if is_correct:
         correct_count += 1
-    
+
     result = {
         'question_id': question_id,
         'question': question,
