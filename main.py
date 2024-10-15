@@ -26,7 +26,10 @@ for question_id, question_data in random_questions:
     # Use MedRAG to generate the answer
     generated_answer, _, _ = cot.answer(question=question, options=options)
     
-    print(generated_answer)
+    print(f"Generated Answer (Raw): {generated_answer}")
+    
+    if not generated_answer:
+        print(f"No answer generated for question ID: {question_id}")
 
     generated_answer_dict = json.loads(generated_answer)
     generated_choice = generated_answer_dict.get('answer_choice', None)
