@@ -38,7 +38,7 @@ for question_id, question_data in random_questions:
     for option_key, option_value in options.items():
         prompt += f"{option_key}: {option_value}\n"
     
-    prompt += "Select the correct answer (A, B, C, or D):\n"
+    prompt += "Select the correct answer (A, B, C, or D):\n Provide only correct answer"
 
     # Generate text with the model using the prompt
     result = pipe(
