@@ -60,6 +60,7 @@ for question_id, question_data in random_questions:
     generated_text = result[0]['generated_text'].strip()
 
     print(generated_text)
+    print('-' * 50)
 
     # Post-process to extract the first valid answer (A, B, C, or D)
     generated_answer = None
