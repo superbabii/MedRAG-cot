@@ -54,6 +54,8 @@ for question_id, question_data in random_questions:
 
     # Extract the generated text
     generated_text = result[0]['generated_text'].strip()
+    
+    print(generated_text)
 
     # Post-process to extract the first valid answer (A, B, C, or D)
     generated_answer = None
