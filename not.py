@@ -57,7 +57,7 @@ for question_id, question_data in random_questions:
     # Extract the actual answer (first character after "Answer:")
     generated_answer = ""
     for line in generated_text.split("\n"):
-        if line.startswith("Answer:"):
+        if line.startswith("Answer: "):
             generated_answer = line.split(":")[1].strip()[0]
             break
     
