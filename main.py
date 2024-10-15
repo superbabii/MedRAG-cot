@@ -26,12 +26,14 @@ for question_id, question_data in random_questions:
     # Use MedRAG to generate the answer
     generated_answer, _, _ = cot.answer(question=question, options=options)
     
-    print(f"Generated Answer (Raw): {generated_answer}")
+    # print(f"Generated Answer (Raw): {generated_answer}")
+    print(f"Generated Answer (Raw): {generated_answer.strip()}")
     
     if not generated_answer:
         print(f"No answer generated for question ID: {question_id}")
 
-    generated_answer_dict = json.loads(generated_answer)
+    # generated_answer_dict = json.loads(generated_answer)
+    generated_answer_dict = json.loads(generated_answer.strip())
     generated_choice = generated_answer_dict.get('answer_choice', None)
     # Compare the generated answer with the correct one
     is_correct = correct_answer == generated_choice[0]
