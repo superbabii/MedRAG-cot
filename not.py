@@ -34,16 +34,20 @@ for question_id, question_data in random_questions:
     correct_answer = question_data['answer']
 
     # Prepare the prompt by combining the question and options
-    prompt = f"Question: {question}\n"
-    for option_key, option_value in options.items():
-        prompt += f"{option_key}: {option_value}\n"
-    
-    prompt += "Select the correct answer (A, B, C, or D):\n"
+    prompt = f"""
+    Question: {question}\n
+    Options:\n
+    A: {options['A']}\n
+    B: {options['B']}\n
+    C: {options['C']}\n
+    D: {options['D']}\n
+    Please choose one of the following options (A, B, C, or D) by typing only the letter corresponding to the correct answer. Do not provide any explanation, just the letter:
+    """
 
     # Generate text with the model using the prompt
     result = pipe(
         prompt, 
-        max_new_tokens=10,  # Limit the generation to short answers
+        max_new_tokens=5,  # Limit the generation to very short answers
         num_return_sequences=1,  
         do_sample=True,  
         top_k=50,  
@@ -54,7 +58,7 @@ for question_id, question_data in random_questions:
 
     # Extract the generated text
     generated_text = result[0]['generated_text'].strip()
-    
+
     print(generated_text)
 
     # Post-process to extract the first valid answer (A, B, C, or D)
