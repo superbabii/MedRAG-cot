@@ -16,9 +16,9 @@ device = 0 if torch.cuda.is_available() else -1
 # Load the language model
 pipe = pipeline(
     "text-generation", 
-    model="meta-llama/Llama-3.2-1B", 
+    model="meta-llama/Llama-3.2-1B",  
     torch_dtype=torch.bfloat16 if torch.cuda.is_available() else torch.float32,
-    device_map="auto",  # Automatically map model to available devices
+    device_map="auto",  
 )
 print(f"Model loaded successfully.")
 
@@ -33,17 +33,23 @@ for question_id, question_data in random_questions:
     options = question_data['options']
     correct_answer = question_data['answer']
 
-    # Prepare the prompt by combining the question and options
-    prompt = f"Question: {question}\n"
+    # Prepare the refined prompt by combining the question and options in a structured manner
+    prompt = f"""You are given a multiple-choice question. Please provide the correct answer by choosing one of the options (A, B, C, or D).
+    
+Question:
+{question}
+
+Options:
+"""
     for option_key, option_value in options.items():
         prompt += f"{option_key}: {option_value}\n"
     
-    prompt += "Select the correct answer (A, B, C, or D):\n"
+    prompt += """\nPlease provide your answer as a single letter (A, B, C, or D)."""
 
-    # Generate text with the model using the prompt
+    # Generate text with the model using the refined prompt
     result = pipe(
         prompt, 
-        max_new_tokens=100,  # Specify how many new tokens to generate
+        max_new_tokens=10,  # Limit to short responses
         num_return_sequences=1,  
         do_sample=True,  
         top_k=50,  
@@ -54,15 +60,18 @@ for question_id, question_data in random_questions:
 
     # Extract and print the generated answer
     generated_text = result[0]['generated_text']
+
+    # Extract the first character of the generated text, assuming it's the answer
+    generated_answer = generated_text.strip().split()[-1][0]  # Get the first character
     
-    is_correct = correct_answer == generated_text[0]
+    is_correct = correct_answer == generated_answer
     if is_correct:
         correct_count += 1
 
     result = {
         'question': question,
         'correct_answer': correct_answer,
-        'generated_answer': generated_text,
+        'generated_answer': generated_answer,
         'is_correct': is_correct
     }
     results.append(result)
