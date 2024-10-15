@@ -43,7 +43,7 @@ for question_id, question_data in random_questions:
     # Generate text with the model using the prompt
     result = pipe(
         prompt, 
-        max_new_tokens=50,  # Replace max_length with max_new_tokens
+        max_new_tokens=100,  # Replace max_length with max_new_tokens
         num_return_sequences=1,
         do_sample=True,  
         top_k=50,  
