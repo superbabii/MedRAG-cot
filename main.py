@@ -12,6 +12,8 @@ random_questions = random.sample(list(benchmark_data.items()), 5)
 # Initialize the MedRAG system
 cot = MedRAG(llm_name="meta-llama/Llama-3.2-1B", rag=False)
 
+print(cot)
+
 # Store the results of comparisons
 results = []
 correct_count = 0
