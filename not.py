@@ -44,25 +44,21 @@ Options:
     for option_key, option_value in options.items():
         prompt += f"{option_key}: {option_value}\n"
     
-    prompt += """\nPlease provide your answer as a single letter (A, B, C, or D)."""
+    prompt += """\nPlease provide your answer as a single letter (A, B, C, or D).\n\nAnswer: """
 
-    # Generate text with the model using the refined prompt
+    # Adjust decoding parameters for better variability
     result = pipe(
         prompt, 
-        max_new_tokens=10,  # Limit to short responses
+        max_new_tokens=3,  # Limit the token generation to a few tokens
         num_return_sequences=1,  
-        do_sample=True,  
-        top_k=50,  
-        top_p=0.95,  
-        temperature=0.7,
+        do_sample=False,  # Use a more deterministic approach
+        top_k=1,  # Make the model more confident in its most likely answer
+        temperature=0.0,  # Disable randomness to avoid repeated answers like "D"
         truncation=True,
     )
 
     # Extract and print the generated answer
     generated_text = result[0]['generated_text']
-    
-    print(generated_text)
-    print('-' * 50)
 
     # Extract the first character of the generated text, assuming it's the answer
     generated_answer = generated_text.strip().split()[-1][0]  # Get the first character
