@@ -60,6 +60,9 @@ Options:
 
     # Extract and print the generated answer
     generated_text = result[0]['generated_text']
+    
+    print(generated_text)
+    print('-' * 50)
 
     # Extract the first character of the generated text, assuming it's the answer
     generated_answer = generated_text.strip().split()[-1][0]  # Get the first character
