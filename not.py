@@ -57,7 +57,7 @@ for question_id, question_data in random_questions:
     )
 
     # Extract the generated text
-    generated_text = result[0]['generated_text'].strip()
+    generated_text = result[0]['generated_text']
 
     print(generated_text)
     print('-' * 50)
