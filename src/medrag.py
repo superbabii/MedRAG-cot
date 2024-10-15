@@ -126,14 +126,10 @@ class MedRAG:
             if "llama-3" in self.llm_name.lower():
                 response = self.model(
                     prompt,
-                    do_sample=True,
+                    do_sample=False,
                     eos_token_id=[self.tokenizer.eos_token_id, self.tokenizer.convert_tokens_to_ids("<|eot_id|>")],
                     pad_token_id=self.tokenizer.eos_token_id,
                     max_length=self.max_length,
-                    num_return_sequences=1,
-                    top_k=50,  
-                    top_p=0.95,  
-                    temperature=0.7,
                     truncation=True,
                     stopping_criteria=stopping_criteria
                 )
@@ -143,7 +139,7 @@ class MedRAG:
                     do_sample=False,
                     eos_token_id=self.tokenizer.eos_token_id,
                     pad_token_id=self.tokenizer.eos_token_id,
-                    max_length=self.max_length,
+                    max_length=200,
                     truncation=True,
                     stopping_criteria=stopping_criteria
                 )
