@@ -49,7 +49,6 @@ for question_id, question_data in random_questions:
 
 # Print the results of the comparison
 for result in results:
-    print(f"Question ID: {result['question_id']}")
     print(f"Question: {result['question']}")
     print(f"Correct Answer: {result['correct_answer']}")
     print(f"Generated Answer: {result['generated_answer']}")
