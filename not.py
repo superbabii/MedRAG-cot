@@ -8,7 +8,7 @@ with open('benchmark.json', 'r') as f:
     benchmark_data = json.load(f)
 
 # Get 5 random questions
-random_questions = random.sample(list(benchmark_data.items()), 5)
+random_questions = random.sample(list(benchmark_data.items()), 1)
 
 # Ensure the appropriate device is selected (GPU if available)
 device = 0 if torch.cuda.is_available() else -1
