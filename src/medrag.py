@@ -76,7 +76,7 @@ class MedRAG:
             elif "llama-3" in llm_name.lower():
                 self.max_length = 8192
                 self.context_length = 7168
-                self.tokenizer.chat_template = open('./templates/llama-3.jinja').read().replace('    ', '').replace('\n', '')
+                # self.tokenizer.chat_template = open('./templates/llama-3.jinja').read().replace('    ', '').replace('\n', '')
                 if ".1" in llm_name or ".2" in llm_name:
                     self.max_length = 131072
                     self.context_length = 128000
