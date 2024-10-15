@@ -8,7 +8,7 @@ with open('benchmark.json', 'r') as f:
     benchmark_data = json.load(f)
 
 # Get 5 random questions
-random_questions = random.sample(list(benchmark_data.items()), 1)
+random_questions = random.sample(list(benchmark_data.items()), 5)
 
 # Ensure the appropriate device is selected (GPU if available)
 device = 0 if torch.cuda.is_available() else -1
@@ -16,9 +16,9 @@ device = 0 if torch.cuda.is_available() else -1
 # Load the language model
 pipe = pipeline(
     "text-generation", 
-    model="meta-llama/Llama-3.2-1B",  
+    model="meta-llama/Llama-3.2-1B", 
     torch_dtype=torch.bfloat16 if torch.cuda.is_available() else torch.float32,
-    device_map="auto",  
+    device_map="auto",  # Automatically map model to available devices
 )
 print(f"Model loaded successfully.")
 
@@ -33,44 +33,36 @@ for question_id, question_data in random_questions:
     options = question_data['options']
     correct_answer = question_data['answer']
 
-    # Prepare the refined prompt by combining the question and options in a structured manner
-    prompt = f"""You are given a multiple-choice question. Please provide the correct answer by choosing one of the options (A, B, C, or D).
-    
-Question:
-{question}
-
-Options:
-"""
+    # Prepare the prompt by combining the question and options
+    prompt = f"Question: {question}\n"
     for option_key, option_value in options.items():
         prompt += f"{option_key}: {option_value}\n"
     
-    prompt += """\nPlease provide your answer as a single letter (A, B, C, or D).\n\nAnswer: """
+    prompt += "Select the correct answer (A, B, C, or D):\n"
 
-    # Adjust decoding parameters for better variability
+    # Generate text with the model using the prompt
     result = pipe(
         prompt, 
-        max_new_tokens=3,  # Limit the token generation to a few tokens
+        max_length=100,
         num_return_sequences=1,  
-        do_sample=False,  # Use a more deterministic approach
-        top_k=1,  # Make the model more confident in its most likely answer
-        temperature=0.0,  # Disable randomness to avoid repeated answers like "D"
+        do_sample=True,  
+        top_k=50,  
+        top_p=0.95,  
+        temperature=0.7,
         truncation=True,
     )
 
     # Extract and print the generated answer
     generated_text = result[0]['generated_text']
-
-    # Extract the first character of the generated text, assuming it's the answer
-    generated_answer = generated_text.strip().split()[-1][0]  # Get the first character
     
-    is_correct = correct_answer == generated_answer
+    is_correct = correct_answer == generated_text[0]
     if is_correct:
         correct_count += 1
 
     result = {
         'question': question,
         'correct_answer': correct_answer,
-        'generated_answer': generated_answer,
+        'generated_answer': generated_text,
         'is_correct': is_correct
     }
     results.append(result)
