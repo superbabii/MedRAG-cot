@@ -54,6 +54,12 @@ for question_id, question_data in random_questions:
 
     # Extract and print the generated answer
     generated_text = result[0]['generated_text']
+    # Extract the actual answer (first character after "Answer:")
+    generated_answer = ""
+    for line in generated_text.split("\n"):
+        if line.startswith("Answer:"):
+            generated_answer = line.split(":")[1].strip()[0]
+            break
     
     is_correct = correct_answer == generated_text[0]
     if is_correct:
