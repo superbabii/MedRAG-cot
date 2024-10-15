@@ -43,7 +43,7 @@ for question_id, question_data in random_questions:
     # Generate text with the model using the prompt
     result = pipe(
         prompt, 
-        max_new_tokens=50,  # Specify how many new tokens to generate
+        max_new_tokens=10,  # Limit the generation to short answers
         num_return_sequences=1,  
         do_sample=True,  
         top_k=50,  
@@ -52,17 +52,25 @@ for question_id, question_data in random_questions:
         truncation=True,
     )
 
-    # Extract and print the generated answer
-    generated_text = result[0]['generated_text']
-    
-    is_correct = correct_answer == generated_text[0]
+    # Extract the generated text
+    generated_text = result[0]['generated_text'].strip()
+
+    # Post-process to extract the first valid answer (A, B, C, or D)
+    generated_answer = None
+    for letter in ['A', 'B', 'C', 'D']:
+        if letter in generated_text:
+            generated_answer = letter
+            break
+
+    # Check if the generated answer is correct
+    is_correct = (generated_answer == correct_answer)
     if is_correct:
         correct_count += 1
 
     result = {
         'question': question,
         'correct_answer': correct_answer,
-        'generated_answer': generated_text,
+        'generated_answer': generated_answer,
         'is_correct': is_correct
     }
     results.append(result)
