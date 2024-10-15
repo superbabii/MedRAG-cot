@@ -32,7 +32,7 @@ for question_id, question_data in random_questions:
         print(f"No answer generated for question ID: {question_id}")
 
     generated_answer_dict = json.loads(generated_answer)
-    generated_choice = generated_answer_dict.get('answer_choice', None)
+    generated_choice = json.dumps(generated_answer_dict, indent=4).get('answer_choice', None)
     # Compare the generated answer with the correct one
     is_correct = correct_answer == generated_choice[0]
     if is_correct:
